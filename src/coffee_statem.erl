@@ -2,13 +2,14 @@
 -behaviour(gen_statem).
 
 -export([start_link/0, stop/0]).
--export([init/1, terminate/3, callback_mode/0]).
--export([selection/3, payment/3, remove/3]).
--export([americano/0, cappuccino/0, tea/0, espresso/0,
+-export([init/1, terminate/3, callback_mode/0]).       % Callback functions
+-export([selection/3, payment/3, remove/3]).           % States
+-export([americano/0, cappuccino/0, tea/0, espresso/0, % Client functions
          pay/1, cancel/0, cup_removed/0]).
 
 start_link() ->
   gen_statem:start_link({local, ?MODULE}, ?MODULE, [], []).
+
 %% Client Functions for Drink Selections
 tea() -> 
   gen_statem:call(?MODULE, {selection, tea, 100}).
@@ -18,6 +19,7 @@ americano() ->
   gen_statem:call(?MODULE, {selection, americano, 100}).
 cappuccino() -> 
   gen_statem:call(?MODULE, {selection, cappuccino, 150}).
+
 %% Client Functions for Actions
 cup_removed() -> 
   gen_statem:call(?MODULE, cup_removed).
@@ -47,19 +49,16 @@ selection(EventType, EventContent, Data) ->
   handle_event(EventType, EventContent, Data).
 
 %% State: payment
-payment({call, From}, {pay, Coin}, {Type, Price, Paid}) ->
-  if
-    Coin + Paid >= Price ->
-      hw:display("Preparing Drink.", []),
-      hw:return_change(Coin + Paid - Price),
-      hw:drop_cup(), hw:prepare(Type),
-      hw:display("Remove Drink.", []),
-      {next_state, remove, {Type, Price, 0}, [{reply, From, ok}]};
-    true ->
-      ToPay = Price - (Coin + Paid),
-      hw:display("Please pay:~w", [ToPay]),
-      {next_state, payment, {Type, Price, Coin + Paid}, [{reply, From, ok}]}
-  end;
+payment({call, From}, {pay, Coin}, {Type, Price, Paid}) when Coin + Paid >= Price ->
+  hw:display("Preparing Drink.", []),
+  hw:return_change(Coin + Paid - Price),
+  hw:drop_cup(), hw:prepare(Type),
+  hw:display("Remove Drink.", []),
+  {next_state, remove, {Type, Price, 0}, [{reply, From, ok}]};
+payment({call, From}, {pay, Coin}, {Type, Price, Paid}) when Coin + Paid < Price ->
+  ToPay = Price - (Coin + Paid),
+  hw:display("Please pay:~w", [ToPay]),
+  {next_state, payment, {Type, Price, Coin + Paid}, [{reply, From, ok}]};
 payment({call, From}, cancel, {_, _, Paid}) ->
   hw:display("Make Your Selection", []),
   hw:return_change(Paid),
