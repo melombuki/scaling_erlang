@@ -1,4 +1,4 @@
--module(coffee_statem).
+-module(fn_coffee_statem).
 -behaviour(gen_statem).
 
 -export([start_link/0, stop/0]).
@@ -76,9 +76,6 @@ remove({call, _From}, {pay, Coin}, _Data) ->
 remove(EventType, EventContent, Data) ->
   handle_event(EventType, EventContent, Data).
 
-terminate(_Reason, _State, _Data) ->
-  void.
-
 %% Handle events common to all states
 handle_event({call, From}, _, _Data) ->
     %% Reply with the current count
@@ -86,3 +83,6 @@ handle_event({call, From}, _, _Data) ->
 handle_event(_EventType, _EventContent, _Data) ->
     %% Ignore all other events
     keep_state_and_data.
+
+terminate(_Reason, _State, _Data) ->
+  void.
