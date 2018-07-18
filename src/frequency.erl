@@ -90,10 +90,19 @@ format_status(_Opt, [_ProcDict, {Available, Allocated}]) ->
 %% Helper functions used to allocate and deallocate resources.
 
 allocate({[], Allocated}, _Pid) ->
+    freq_overload:frequency_denied(),
     {{[], Allocated}, {error, no_frequency}};
 allocate({[Res|Resources], Allocated}, Pid) ->
+    case Resources of
+      [] -> freq_overload:no_frequency();
+      _ -> ok
+    end,
     {{Resources, [{Res, Pid}|Allocated]}, {ok, Res}}.
 
 deallocate({Free, Allocated}, Res) ->
+    case Free of
+      [] -> freq_overload:frequency_available();
+      _ -> ok
+    end,
     NewAllocated = lists:keydelete(Res, 1, Allocated),
     {[Res|Free],  NewAllocated}.
