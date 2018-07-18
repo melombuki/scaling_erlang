@@ -26,7 +26,7 @@ attach_phone(Ms) ->
 
 detach_phone(Ms) ->
   case hlr:lookup_id(Ms) of
-    {ok, _Pid} ->
+	{ok, _Pid} ->
       supervisor:terminate_child(?MODULE, Ms),
       supervisor:delete_child(?MODULE, Ms);
     _NotAttached ->
