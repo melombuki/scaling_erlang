@@ -15,5 +15,9 @@ init(_) ->
   {ok, {{rest_for_one, 2, 3600}, ChildSpecList}}.
 
 child(Module) ->
-  {Module, {Module, start_link, []},
-  permanent, 2000, worker, [Module]}.
+  #{id => Module,
+    start => {Module, start_link, []},
+    restart => permanent,
+    shutdown => 2000,
+    type => worker,
+    modules => [Module]}.
