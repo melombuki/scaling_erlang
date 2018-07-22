@@ -19,8 +19,9 @@ handle_event(Event, TableId) ->
     try ets:update_counter(TableId, Event, 1) of
         _ok -> {ok, TableId}
     catch
-        error:_ -> ets:insert(TableId, {Event, 1}),
-                   {ok, TableId}
+        error: _ -> 
+          ets:insert(TableId, {Event, 1}),
+          {ok, TableId}
     end.
 
 handle_call(get_counters, TableId) ->

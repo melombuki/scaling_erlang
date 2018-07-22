@@ -9,4 +9,4 @@ frequency_available() -> gen_event:notify(?MODULE, {clear_alarm, no_frequency}).
 frequency_denied() -> gen_event:notify(?MODULE, {event, {frequency_denied, self()}}).
 
 add(M,A) -> gen_event:add_sup_handler(?MODULE, M, A).
-delete(M,A) -> gen_event:delete_handler(?MODULE,M,A).
+delete(M,A) -> gen_event:delete_handler(?MODULE, M, A).

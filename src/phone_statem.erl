@@ -54,7 +54,7 @@ inbound(ToMsId) ->
 %% States
 idle(cast, {inbound, FromMsId}, Ms) ->
   phone:reply(inbound, FromMsId, Ms),
-  {next_state, receiving, {FromMsId, Ms}};
+  {next_state, receiving, {Ms, FromMsId}};
 idle({call, From}, {outbound, ToMs}, Ms) ->
   case hlr:lookup_id(ToMs) of
     {error, invalid} ->

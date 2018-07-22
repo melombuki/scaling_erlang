@@ -1,0 +1,10 @@
+{application, bsc,
+  [{description, "Base Station Controller"},
+   {vsn, "1.0"},
+   {modules, [bsc, bsc_sup, frequency, freq_overload,
+              freq_logger, phone_sup, phone_statem]},
+   {registered, [bsc_sup, frequency, frequency_sup,
+                 overlaod, phone_sup]},
+   {applications, [kernel, stdlib, sasl]},
+   {env, []},
+   {mod, {bsc, []}}]}.
