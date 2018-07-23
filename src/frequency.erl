@@ -48,7 +48,7 @@ init(_Args) ->
 
 %% Dummy function. To be replaced with call to BSC.
 
-get_frequencies() -> [10,11,12,13,14, 15].
+get_frequencies() -> [10, 11, 12, 13, 14, 15].
 
 
 %% handle_call({allocate, Pid}, _, {Available, Allocated}) ->

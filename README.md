@@ -1,12 +1,17 @@
 This is some Erlang code written while following along with the book Designing for Scalability with Erlang/OTP.
 
 Compile:
-- Enter the command 
-  ```bash
-  erl -make
+  ```console
+  $ erl -make
   ```
-Run:
-- After compiling enter the command
+Start:
   ```bash
-  erl -pa ebin
+  $ erl -pa ebin
+  ```
+
+Run:
+  ```erl
+  1> application:start(sasl).
+  2> application:start(bsc).
+  3> bsc:start_test(10, 10).
   ```
